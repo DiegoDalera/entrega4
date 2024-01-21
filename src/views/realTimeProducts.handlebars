@@ -4,20 +4,22 @@
   {{/each}}
 </ul>
 
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
   const productList = document.getElementById('productList'); const socket =
     io(); socket.on('productAdded', function (product) {
       const li =
-        document.createElement('li'); li.id = `product-${product.id}`; li.textContent
-          = `${product.title} - $${product.price}`; productList.appendChild(li);
+        document.createElement('li'); li.id = `product-${product.product.id}`;
+      li.textContent = `${product.product.title} - ${product.product.price}`;
+      productList.appendChild(li);
+    }); socket.on('productUpdated', function
+      (product) {
+        const productToUpdate =
+          document.getElementById(`product-${product.id}`); if (productToUpdate) {
+            productToUpdate.textContent = `${product.title} - ${product.price}`;
+          }
     });
-  socket.on('productUpdated', function (product) {
-    const productToUpdate =
-      document.getElementById(`product-${product.id}`); if (productToUpdate) {
-        productToUpdate.textContent = `${product.title} - $${product.price}`;
-      }
-  });
   socket.on('productDeleted', function (productId) {
     const productToDelete =
       document.getElementById(`product-${productId}`); if (productToDelete) {
@@ -25,5 +27,3 @@
       }
   });
 </script>
-
-<script src="/socket.io/socket.io.js"></script>

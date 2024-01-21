@@ -3,7 +3,7 @@ const router = express.Router();
 const ProductManager = require('../ProductManager.class');
 
 // La función exportada toma el objeto 'io' y retorna el router configurado
-module.exports = function(io) {
+module.exports = function (io) {
 
   const productManager = new ProductManager('../products.json');
 
@@ -64,17 +64,17 @@ module.exports = function(io) {
     }
   });
 
-  router.get('/realtimeproducts', async (req, res) => {
+  router.get('/real/realtimeproducts', async (req, res) => {
     try {
-        const products = await productManager.getProducts();
-        res.render('realTimeProducts', { products });
+      const products = await productManager.getProducts();
+      res.render('realTimeProducts', { products });
     } catch (err) {
-        res.status(500).send('Error al obtener productos');
+      res.status(500).send('Error al obtener productos');
     }
-});
+  });
 
   return router;
-  
+
 
 };
 

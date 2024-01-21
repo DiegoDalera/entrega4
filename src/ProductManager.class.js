@@ -8,7 +8,7 @@ class ProductManager {
         this.nextProductId = 1;
         this.init(); // Llama a init para cargar los productos
     }
-    
+
 
 
     async init() {
@@ -17,31 +17,31 @@ class ProductManager {
 
     // Método para obtener todos los productos
     async getProducts() {
-        
+
         if (!this.products || this.products.length === 0) {
             await this.loadProducts();
         }
         return this.products;
     }
-async loadProducts() {
-    try {
-        const data = await fs.readFile(this.path, 'utf8');
-        this.products = JSON.parse(data);
-        this.nextProductId = this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 1;
-    } catch (err) {
-        if (err.code === 'ENOENT') {
-            console.log("El archivo no existe. Se iniciará un nuevo arreglo de productos.");
-            this.products = [];
-            await this.saveProducts(); // Esto creará un archivo vacío
-        } else if (err instanceof SyntaxError) {
-            console.log("Error de sintaxis en el archivo JSON. Se iniciará un nuevo arreglo de productos.");
-            this.products = [];
-            await this.saveProducts();
-        } else {
-            throw err;
+    async loadProducts() {
+        try {
+            const data = await fs.readFile(this.path, 'utf8');
+            this.products = JSON.parse(data);
+            this.nextProductId = this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 1;
+        } catch (err) {
+            if (err.code === 'ENOENT') {
+                console.log("El archivo no existe. Se iniciará un nuevo arreglo de productos.");
+                this.products = [];
+                await this.saveProducts(); // Esto creará un archivo vacío
+            } else if (err instanceof SyntaxError) {
+                console.log("Error de sintaxis en el archivo JSON. Se iniciará un nuevo arreglo de productos.");
+                this.products = [];
+                await this.saveProducts();
+            } else {
+                throw err;
+            }
         }
     }
-}
 
 
     async saveProducts() {
@@ -59,18 +59,18 @@ async loadProducts() {
         if (!title || !description || !code || !category) {
             console.log("Error: Todos los campos de texto son obligatorios.");
             console.log(title, description, code, category)
-            return {status: 400, msg:"Error: Todos los campos de texto son obligatorios."};
+            return { status: 400, msg: "Error: Todos los campos de texto son obligatorios." };
         }
 
         // Verifica que el precio y el stock sean números y no estén indefinidos
         if (typeof price !== 'number' || typeof stock !== 'number') {
             console.log("Error: Precio y stock deben ser números.");
-            return  {status: 400, msg:"Error: Precio y stock deben ser números."};
+            return { status: 400, msg: "Error: Precio y stock deben ser números." };
         }
 
         if (this.products.some(product => product.code === code)) {
             console.log("Error: El código ya existe para otro producto.");
-            return{status: 400, msg:"Error: El código ya existe para otro producto."};
+            return { status: 400, msg: "Error: El código ya existe para otro producto." };
         }
 
         const product = {
@@ -88,7 +88,7 @@ async loadProducts() {
         this.products.push(product);
         await this.saveProducts();
         console.log(`El producto ${title} ha sido agregado con éxito.`);
-        return{status: 200, msg:`El producto ${title} ha sido agregado con éxito.`};
+        return { status: 200, msg: `El producto ${title} ha sido agregado con éxito.`, product: product };
     }
 
 

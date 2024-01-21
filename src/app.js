@@ -10,8 +10,9 @@ app.use(express.static('public'));
 const { engine } = require('express-handlebars');
 
 app.engine('handlebars', engine());
+app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
-app.set('views', './views');
+
 
 //Configuro soket io
 const server = require('http').createServer(app);
